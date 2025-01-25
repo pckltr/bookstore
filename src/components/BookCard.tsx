@@ -15,16 +15,24 @@ interface Props {
 }
 
 const BookCard: React.FC<Props> = ({ book, updateStock }) => {
-  const { addToCart } = useCart();
+  const { cart, addToCart } = useCart();
 
   const handleAddToCart = () => {
-    addToCart({
-      id: book.id,
-      title: book.title,
-      price: book.price,
-      quantity: 1,
-    });
-    updateStock(book.id, 1);
+    const cartItem = cart.find((item) => item.id === book.id);
+    const cartQuantity = cartItem ? cartItem.quantity : 0;
+    const availableStock = book.stock + cartQuantity;
+
+    if (availableStock <= 0) {
+      alert("Item is out of stock!");
+    } else {
+      addToCart({
+        id: book.id,
+        title: book.title,
+        price: book.price,
+        quantity: 1,
+      });
+      updateStock(book.id, 1);
+    }
   };
 
   return (
