@@ -15,24 +15,16 @@ interface Props {
 }
 
 const BookCard: React.FC<Props> = ({ book, updateStock }) => {
-  const { cart, addToCart } = useCart();
+  const { addToCart } = useCart();
 
   const handleAddToCart = () => {
-    const cartItem = cart.find((item) => item.id === book.id);
-    const cartQuantity = cartItem ? cartItem.quantity : 0;
-
-    if (cartQuantity < book.stock) {
-      addToCart({
-        id: book.id,
-        title: book.title,
-        price: book.price,
-        quantity: 1,
-      });
-
-      updateStock(book.id, 1);
-    } else {
-      alert("Cannot add more items. Stock limit reached!");
-    }
+    addToCart({
+      id: book.id,
+      title: book.title,
+      price: book.price,
+      quantity: 1,
+    });
+    updateStock(book.id, 1);
   };
 
   return (
