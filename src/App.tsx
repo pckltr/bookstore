@@ -31,7 +31,7 @@ const App: React.FC = () => {
               <Route path="/profile" element={<ProfilePage />} />
             </Routes>
           </div>
-          <ShoppingCart updateStock={updateStock} />
+          <ShoppingCart books={books} updateStock={updateStock} />
         </div>
       </div>
     </Router>

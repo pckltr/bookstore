@@ -2,16 +2,35 @@ import React from "react";
 import { useCart } from "../context/CartContext";
 
 interface ShoppingCartProps {
+  books: Array<{
+    id: number;
+    title: string;
+    stock: number;
+  }>;
   updateStock: (id: number, quantity: number) => void;
 }
 
-const ShoppingCart: React.FC<ShoppingCartProps> = ({ updateStock }) => {
+const ShoppingCart: React.FC<ShoppingCartProps> = ({ books, updateStock }) => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
 
   const totalPrice = cart.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+  const handleQuantityChange = (id: number, newQuantity: number) => {
+    const book = books.find((b) => b.id === id);
+    if (!book) {
+      console.error(`Book with ID ${id} not found.`);
+      return;
+    }
+
+    if (newQuantity > book.stock) {
+      alert("Quantity exceeds available stock!");
+    } else if (newQuantity >= 1) {
+      updateQuantity(id, newQuantity);
+    }
+  };
 
   const handleRemoveFromCart = (id: number, quantity: number) => {
     updateStock(id, -quantity);
@@ -39,7 +58,7 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ updateStock }) => {
               value={item.quantity}
               min={1}
               onChange={(e) =>
-                updateQuantity(item.id, parseInt(e.target.value, 10))
+                handleQuantityChange(item.id, parseInt(e.target.value, 10))
               }
               className="border w-16 p-1"
             />
